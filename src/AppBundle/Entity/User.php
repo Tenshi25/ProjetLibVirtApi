@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -20,6 +21,8 @@ class User
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"list"})
      */
     private $id;
 
@@ -27,6 +30,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="login", type="string", length=255, unique=true)
+     * @JMS\Serializer\Annotation\Type("string")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $login;
 
@@ -40,16 +45,19 @@ class User
     /**
      * @ORM\ManyToOne(targetEntity="Role", inversedBy="users")
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     * @Serializer\Groups({"aucun"})
      */
     private $role;
 
     /**
      * @ORM\OneToMany(targetEntity="Vm", mappedBy="user", cascade={"remove"})
+     * @Serializer\Groups({"aucun"})
      */
     private $vms;
 
     /**
      * @ORM\OneToMany(targetEntity="Pool", mappedBy="user", cascade={"remove"})
+     * @Serializer\Groups({"aucun"})
      */
     private $pools;
 
