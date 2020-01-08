@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Apirests list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for apiRest in apiRests %}
+            <tr>
+                <td><a href="{{ path('apirest_show', { 'id': apiRest.id }) }}">{{ apiRest.id }}</a></td>
+                <td>{{ apiRest.title }}</td>
+                <td>{{ apiRest.content }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('apirest_show', { 'id': apiRest.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('apirest_edit', { 'id': apiRest.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('apirest_new') }}">Create a new apiRest</a>
+        </li>
+    </ul>
+{% endblock %}

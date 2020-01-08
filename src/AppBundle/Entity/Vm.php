@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Vm
@@ -18,6 +19,8 @@ class Vm
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"list"})
      */
     private $id;
 
@@ -25,6 +28,8 @@ class Vm
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @JMS\Serializer\Annotation\Type("string")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $name;
 
@@ -32,6 +37,8 @@ class Vm
      * @var string
      *
      * @ORM\Column(name="os", type="string", length=255)
+     * @JMS\Serializer\Annotation\Type("string")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $os;
 
@@ -39,6 +46,8 @@ class Vm
      * @var int
      *
      * @ORM\Column(name="nbcpu", type="integer")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $nbcpu;
 
@@ -46,6 +55,8 @@ class Vm
      * @var int
      *
      * @ORM\Column(name="currentCpu", type="integer", nullable=true, options={"default":0})
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $currentCpu;
 
@@ -53,6 +64,8 @@ class Vm
      * @var int
      *
      * @ORM\Column(name="currentRam", type="integer", nullable=true, options={"default":0})
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $currentRam;
 
@@ -60,6 +73,8 @@ class Vm
      * @var int
      *
      * @ORM\Column(name="maxRam", type="integer")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $maxRam;
 
@@ -67,6 +82,8 @@ class Vm
      * @var int
      *
      * @ORM\Column(name="harddisk", type="integer")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $harddisk;
 
@@ -74,24 +91,31 @@ class Vm
      * @var int
      *
      * @ORM\Column(name="currentharddisk", type="integer", nullable=true, options={"default":0})
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $currentharddisk;
     
     /**
      * @var boolean
      * @ORM\Column(name="active", type="boolean", nullable=true, options={"default":true})
+     * @JMS\Serializer\Annotation\Type("boolean")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $active;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="vms")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Serializer\Groups({"aucun"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Pool", inversedBy="vmsPool")
      * @ORM\JoinColumn(name="pool_id", referencedColumnName="id")
+     * @Serializer\Groups({"aucun"})
+     * 
      */
     private $pool;
 
