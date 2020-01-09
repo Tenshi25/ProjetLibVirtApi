@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+  <div class="row">
+    <div class="col-sm-12">
+    <h1>Vms list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Os</th>
+                <th>Nbcpu</th>
+                <th>Currentcpu</th>
+                <th>Currentram</th>
+                <th>Maxram</th>
+                <th>Harddisk</th>
+                <th>Currentharddisk</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vm in vms %}
+            <tr>
+                <td><a href="{{ path('vm_show', { 'id': vm.id }) }}">{{ vm.id }}</a></td>
+                <td>{{ vm.name }}</td>
+                <td>{{ vm.os }}</td>
+                <td>{{ vm.nbcpu }}</td>
+                <td>{{ vm.currentCpu }}</td>
+                <td>{{ vm.currentRam }}</td>
+                <td>{{ vm.maxRam }}</td>
+                <td>{{ vm.harddisk }}</td>
+                <td>{{ vm.currentharddisk }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('vm_show', { 'id': vm.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('vm_edit', { 'id': vm.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('vm_new') }}">Create a new vm</a>
+        </li>
+    </ul>
+    </div>
+</div>
+{% endblock %}

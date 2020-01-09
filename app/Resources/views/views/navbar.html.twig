@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark sticky-top">
+<a class="navbar-brand" href="#">Gestion de Vm</a>
+<!-- Toggler/collapsibe Button -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>  
+    
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      {% if role == "User" %}
+        <li class="nav-item"><a class="nav-link" href="{{ path('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ path('vm_index') }}">Gestion des vm</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ path('pool_index') }}">Gestion de pool</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ path('vm_new') }}">Crée une vm</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ path('pool_new') }}">Crée une pool</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="glyphicon glyphicon-user"></i>{{ user.login }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ path('logout') }}"><i class="glyphicon glyphicon-log-in"></i>se déconnecter</a></li>
+      {% endif %}
+
+    
+      {% if role == "Admin" %}
+          <li class="nav-item"><a class="nav-link" href="{{ path('home') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ path('vm_index') }}">Gestion des vm</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ path('pool_index') }}">Gestion de pool</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ path('vm_new') }}">Crée une vm</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ path('pool_new') }}">Crée une pool</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ path('user_index') }}">users</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ path('role_index') }}">role</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="glyphicon glyphicon-user"></i>{{ user.login }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ path('logout') }}"><i class="glyphicon glyphicon-log-in"></i>se déconnecter</a></li>
+      {% endif %}
+        
+          
+        
+      
+    </ul>
+    </div>
+</nav>
+

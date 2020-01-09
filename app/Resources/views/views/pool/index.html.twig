@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+  <div class="row">
+    <div class="col-sm-12">
+    <h1>Pools list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pool in pools %}
+            <tr>
+                <td><a href="{{ path('pool_show', { 'id': pool.id }) }}">{{ pool.id }}</a></td>
+                <td>{{ pool.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('pool_show', { 'id': pool.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('pool_edit', { 'id': pool.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('pool_new') }}">Create a new pool</a>
+        </li>
+    </ul>
+    </div>
+</div>
+{% endblock %}

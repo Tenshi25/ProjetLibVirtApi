@@ -9,12 +9,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Pool
+ * Role
  *
- * @ORM\Table(name="pool")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PoolRepository")
+ * @ORM\Table(name="role")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
  */
-class Pool
+class Role
 {
     /**
      * @var int
@@ -22,42 +22,28 @@ class Pool
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Serializer\Groups({"detail"})
      */
     private $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      * @Serializer\Groups({"detail", "list"})
      * @Assert\NotBlank(groups={"Create"})
      */
     private $name;
-
+    
     /**
-     * @ORM\OneToMany(targetEntity="Vm", mappedBy="pool" ,cascade={"persist"})
-     * @Serializer\Groups({"detail"})
+     * @ORM\OneToMany(targetEntity="User", mappedBy="role")
+     * @Serializer\Groups({"aucun"})
      */
-
-    private $vmsPool;
+    private $users;
 
     public function __construct()
     {
-        $this->vmsPool = new ArrayCollection();
-    }
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="pools")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * @Serializer\Groups({"detail", "list"})
-     */
-    private $user;
-
-    /**
-     * @return Collection|Vm[]
-     */
-    public function getVmsPool(): Collection
-    {
-        return $this->vmsPool;
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -75,7 +61,7 @@ class Pool
      *
      * @param string $name
      *
-     * @return Pool
+     * @return Role
      */
     public function setName($name)
     {
@@ -93,30 +79,4 @@ class Pool
     {
         return $this->name;
     }
-
-    /**
-     * Get user.
-     *
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Set user.
-     *
-     * @param User $user
-     *
-     * @return Pool
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    
 }

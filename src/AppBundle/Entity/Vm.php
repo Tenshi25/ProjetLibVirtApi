@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Vm
@@ -18,6 +19,8 @@ class Vm
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"list"})
      */
     private $id;
 
@@ -25,6 +28,8 @@ class Vm
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @JMS\Serializer\Annotation\Type("string")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $name;
 
@@ -32,27 +37,35 @@ class Vm
      * @var string
      *
      * @ORM\Column(name="os", type="string", length=255)
+     * @JMS\Serializer\Annotation\Type("string")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $os;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="nbcpu", type="string", length=255)
+     * @ORM\Column(name="nbcpu", type="integer")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $nbcpu;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="currentCpu", type="string", length=255)
+     * @ORM\Column(name="currentCpu", type="integer", nullable=true, options={"default":0})
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $currentCpu;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="currentRam", type="integer")
+     * @ORM\Column(name="currentRam", type="integer", nullable=true, options={"default":0})
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $currentRam;
 
@@ -60,6 +73,8 @@ class Vm
      * @var int
      *
      * @ORM\Column(name="maxRam", type="integer")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $maxRam;
 
@@ -67,21 +82,90 @@ class Vm
      * @var int
      *
      * @ORM\Column(name="harddisk", type="integer")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $harddisk;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="currentharddisk", type="integer")
+     * @ORM\Column(name="currentharddisk", type="integer", nullable=true, options={"default":0})
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $currentharddisk;
+    
+    /**
+     * @var boolean
+     * @ORM\Column(name="active", type="boolean", nullable=true, options={"default":true})
+     * @JMS\Serializer\Annotation\Type("boolean")
+     * @Serializer\Groups({"detail", "list"})
+     */
+    private $active;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="vms")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Pool", inversedBy="vmsPool")
+     * @ORM\JoinColumn(name="pool_id", referencedColumnName="id")
+     * @Serializer\Groups({"detail", "list"})
+     * 
+     */
+    private $pool;
+
+    /**
+     * Set user.
+     *
+     * @param User $user
+     *
+     * @return Vm
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+     /**
+     * Set pool.
+     *
+     * @param Pool $pool
+     *
+     * @return Vm
+     */
+    public function setPool($pool)
+    {
+        $this->pool = $pool;
+
+        return $this;
+    }
+
+    /**
+     * Get user.
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+    
+    /**
+     * Get pool.
+     *
+     * @return Pool
+     */
+    public function getPool()
+    {
+        return $this->pool;
+    }
 
     /**
      * Get id.
@@ -284,4 +368,5 @@ class Vm
     {
         return $this->currentharddisk;
     }
+
 }

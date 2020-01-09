@@ -3,7 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use JMS\Serializer\Annotation as Serializer;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * User
  *
@@ -18,6 +21,8 @@ class User
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Serializer\Annotation\Type("integer")
+     * @Serializer\Groups({"list"})
      */
     private $id;
 
@@ -25,6 +30,9 @@ class User
      * @var string
      *
      * @ORM\Column(name="login", type="string", length=255, unique=true)
+     * @JMS\Serializer\Annotation\Type("string")
+     * @Serializer\Groups({"detail", "list"})
+     * @Assert\NotBlank(groups={"Create"})
      */
     private $login;
 
@@ -32,24 +40,50 @@ class User
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
+     * @Serializer\Groups({"aucun"})
      */
     private $password;
-
+    
     /**
-     * @var string
-     *
-     * @ORM\Column(name="role", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Role", inversedBy="users")
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $role;
 
     /**
-     * @ORM\OneToMany(targetEntity="Vm", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Vm", mappedBy="user", cascade={"remove"})
+     * @Serializer\Groups({"detail"})
      */
     private $vms;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Pool", mappedBy="user", cascade={"remove"})
+     * @Serializer\Groups({"aucun"})
+     */
+    private $pools;
+
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->pools = new ArrayCollection();
+        $this->vms = new ArrayCollection();
+        $this->role = new Role();
+    }
+    
+    /**
+     * @return Collection|Pool[]
+     */
+    public function getPools(): Collection
+    {
+        return $this->pools;
+    }
+
+    /**
+     * @return Collection|Vm[]
+     */
+    public function getVms(): Collection
+    {
+        return $this->vms;
     }
 
     /**
@@ -127,7 +161,7 @@ class User
     /**
      * Get role.
      *
-     * @return string
+     * @return Role
      */
     public function getRole()
     {
