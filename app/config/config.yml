@@ -85,3 +85,7 @@ fos_rest:
     format_listener:
         rules:
             - { path: '^/', priorities: ['json'], fallback_format: 'json' }
+    exception:
+        enabled: true
+        codes:
+           { AppBundle\Exception\ResourceValidationException: 400 }

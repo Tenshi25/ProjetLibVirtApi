@@ -4,10 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations as Rest;
+
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -16,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
+use AppBundle\Exception\ResourceValidationException;
+
 /**
  * User controller.
  *
@@ -53,7 +56,19 @@ class UserController extends FOSRestController
     public function createAction(user $user, ConstraintViolationList $errors)
     {
         if (count($errors)) {
-            return $this->view($errors, Response::HTTP_BAD_REQUEST);
+            $message = "the JSON sent contains invalid data: ";
+            
+            foreach($errors as $error){
+                $message .=\sprintf(
+                    "Field %s : %s",
+                    $error->getPropertyPath(),
+                    $error-> getMessage()
+                );
+            }
+            
+            throw new ResourceValidationException($message);
+            
+            //return $this->view($errors, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $this->getDoctrine()->getManager();
