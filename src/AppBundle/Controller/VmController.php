@@ -29,7 +29,7 @@ class VmController extends FOSRestController
       /**
      * @Get(
      *     path = "/vms/{id}",
-     *     name = "app_user_show",
+     *     name = "app_vm_show",
      *     requirements = {"id"="\d+"}
      * )
      * @View(serializerGroups={"detail"})
@@ -42,7 +42,7 @@ class VmController extends FOSRestController
      /**
      * @Rest\Post(
      *    path = "/vms",
-     *    name = "app_user_create"
+     *    name = "app_vm_create"
      * )
      * @Rest\View(StatusCode = 201)
      * @ParamConverter(
@@ -82,7 +82,7 @@ class VmController extends FOSRestController
 
     /**
      * Lists all vm entities. 
-     * @Rest\Get("/vms", name="app_user_list")
+     * @Rest\Get("/vms", name="app_vm_list")
      * @View(serializerGroups={"list"})
      */
     public function listAction()
@@ -105,6 +105,5 @@ class VmController extends FOSRestController
             $em->flush();
             
     }
-
 
 }
