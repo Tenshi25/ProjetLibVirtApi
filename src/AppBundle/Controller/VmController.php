@@ -3,78 +3,108 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Vm;
+use FOS\RestBundle\Controller\FOSRestController;
+
+use JMS\Serializer\SerializationContext;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
-use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
+use AppBundle\Exception\ResourceValidationException;
 
 /**
  * Vm controller.
  *
  */
-class VmController extends Controller
+class VmController extends FOSRestController
 {
-   /**
-     * @Route("/vms", name="vms_create")
-     * @Method({"POST"})
+      /**
+     * @Get(
+     *     path = "/vms/{id}",
+     *     name = "app_user_show",
+     *     requirements = {"id"="\d+"}
+     * )
+     * @View(serializerGroups={"detail"})
      */
-    public function newAction(Request $request)
+    public function showAction(vm $vm)
     {
-        $data = $request->getContent();
-        $vm = $this->get('jms_serializer')->deserialize($data, 'AppBundle\Entity\Vm', 'json');
+        return $vm;
+    }
+
+     /**
+     * @Rest\Post(
+     *    path = "/vms",
+     *    name = "app_user_create"
+     * )
+     * @Rest\View(StatusCode = 201)
+     * @ParamConverter(
+     * "vm",
+     * converter="fos_rest.request_body",
+     * options={
+     *  "validator"= {"groups"="Create"} 
+     *  }
+     * )
+     */
+    public function createAction(vm $vm, ConstraintViolationList $errors)
+    {
+        if (count($errors)) {
+            $message = "the JSON sent contains invalid data: ";
+            
+            foreach($errors as $error){
+                $message .=\sprintf(
+                    "Field %s : %s",
+                    $error->getPropertyPath(),
+                    $error-> getMessage()
+                );
+            }
+            
+            throw new ResourceValidationException($message);
+            
+            //return $this->view($errors, Response::HTTP_BAD_REQUEST);
+        }
 
         $em = $this->getDoctrine()->getManager();
+
         $em->persist($vm);
         $em->flush();
 
-        return new Response('', Response::HTTP_CREATED);
+        return $this->view($vm, Response::HTTP_CREATED, ['Location' => $this->generateUrl('app_user_show', ['id' => $vm->getId(), UrlGeneratorInterface::ABSOLUTE_URL])]);
     }
  
 
     /**
-     * @Route("/vms", name="vms_list")
-     * @Method({"GET"})
+     * Lists all vm entities. 
+     * @Rest\Get("/vms", name="app_user_list")
+     * @View(serializerGroups={"list"})
      */
-    public function listVmsAction()
+    public function listAction()
     {
         $vms = $this->getDoctrine()->getRepository('AppBundle:Vm')->findAll();
-
-        $data = $this->get('jms_serializer')->serialize($vms, 'json', SerializationContext::create()->setGroups(array('list')));
-
-        $response = new Response($data);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return $vms;
     }
 
     /**
-     * @Route("/vms/{id}", name="vms_show")
-     * @Method({"GET"})
-     */
-    public function showVmsAction(Vm $vm)
-    {
-        $data = $this->get('jms_serializer')->serialize($vm, 'json', SerializationContext::create()->setGroups(array('detail')));
-
-        $response = new Response($data);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-    /**
-     * @Route("/vms/{id}", name="vms_delete")
-     * @Method({"DELETE"})
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\Delete("/vms/{id}")
      */
 
     public function deleteAction(Request $request)
     {
-            $vm = $this->get('jms_serializer')->deserialize($data, 'AppBundle\Entity\Vm', 'json');
             $em = $this->getDoctrine()->getManager();
+            $vm = $em->getRepository('AppBundle:Vm')
+            ->find($request->get('id'));
             $em->remove($vm);
             $em->flush();
-            return new Response('delete OK', Response::HTTP_DELETE);
+            
     }
-
 
 
 }

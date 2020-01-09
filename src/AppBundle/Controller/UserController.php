@@ -32,7 +32,7 @@ class UserController extends FOSRestController
      *     name = "app_user_show",
      *     requirements = {"id"="\d+"}
      * )
-     * @View
+     * @View(serializerGroups={"detail"})
      */
     public function showAction(User $user)
     {
