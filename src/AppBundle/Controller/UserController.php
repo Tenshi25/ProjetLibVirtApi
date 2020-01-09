@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
+use JMS\Serializer\SerializationContext;
+
 
 /**
  * User controller.
@@ -34,7 +36,7 @@ class UserController extends FOSRestController
      * )
      * @View(serializerGroups={"detail"})
      */
-    public function showAction(User $user)
+    public function showAction(user $user)
     {
         return $user;
     }
