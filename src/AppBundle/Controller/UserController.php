@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -10,28 +11,17 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
+use Symfony\Component\Validator\ConstraintViolationList;
 /**
  * User controller.
  *
  */
-class UserController extends Controller
+class UserController extends FOSRestController
 {
-    /**
-     * Lists all user entities.
-     *
-     * @Route("/users", name="user_index")
-     * @Method("GET")
-     */
-    public function indexAction()
-    {
-
-        return $this->render('default/index.html.twig');
-    }
 
     /**
      * @Get(
@@ -52,15 +42,52 @@ class UserController extends Controller
      *    name = "app_user_create"
      * )
      * @Rest\View(StatusCode = 201)
-     * @ParamConverter("user", converter="fos_rest.request_body")
+     * @ParamConverter(
+     * "user",
+     * converter="fos_rest.request_body",
+     * options={
+     *  "validator"= {"groups"="Create"} 
+     *  }
+     * )
      */
-    public function createAction(user $user)
+    public function createAction(user $user, ConstraintViolationList $errors)
     {
+        if (count($errors)) {
+            return $this->view($errors, Response::HTTP_BAD_REQUEST);
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $em->persist($user);
         $em->flush();
 
-        return $user;
+        return $this->view($user, Response::HTTP_CREATED, ['Location' => $this->generateUrl('app_user_show', ['id' => $user->getId(), UrlGeneratorInterface::ABSOLUTE_URL])]);
     }
+
+     /**
+     * Lists all user entities. 
+     * @Rest\Get("/users", name="app_user_list")
+     * @View
+     */
+    public function listAction()
+    {
+        $users = $this->getDoctrine()->getRepository('AppBundle:User')->findAll();
+        //return $this->view($users, Response::HTTP_OK);
+        return $users;
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\Delete("/users/{id}")
+     */
+
+    public function deleteAction(Request $request)
+    {
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository('AppBundle:User')
+            ->find($request->get('id'));
+            $em->remove($user);
+            $em->flush();
+    }
+
 }

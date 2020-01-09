@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * User
  *
@@ -32,6 +32,7 @@ class User
      * @ORM\Column(name="login", type="string", length=255, unique=true)
      * @JMS\Serializer\Annotation\Type("string")
      * @Serializer\Groups({"detail", "list"})
+     * @Assert\NotBlank(groups={"Create"})
      */
     private $login;
 
