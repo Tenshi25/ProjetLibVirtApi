@@ -107,14 +107,14 @@ class Vm
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="vms")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * @Serializer\Groups({"aucun"})
+     * @Serializer\Groups({"detail", "list"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Pool", inversedBy="vmsPool")
      * @ORM\JoinColumn(name="pool_id", referencedColumnName="id")
-     * @Serializer\Groups({"aucun"})
+     * @Serializer\Groups({"detail", "list"})
      * 
      */
     private $pool;

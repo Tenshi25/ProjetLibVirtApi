@@ -22,6 +22,7 @@ class Role
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Serializer\Groups({"detail"})
      */
     private $id;
 
@@ -36,6 +37,7 @@ class Role
     
     /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="role")
+     * @Serializer\Groups({"aucun"})
      */
     private $users;
 

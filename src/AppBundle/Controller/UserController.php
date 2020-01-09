@@ -82,7 +82,7 @@ class UserController extends FOSRestController
      /**
      * Lists all user entities. 
      * @Rest\Get("/users", name="app_user_list")
-     * @View
+     * @View(serializerGroups={"list"})
      */
     public function listAction()
     {

@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
+use JMS\Serializer\SerializationContext;
 
 /**
  * Role controller.
@@ -32,7 +33,7 @@ class RoleController extends FOSRestController
      *     name = "app_role_show",
      *     requirements = {"id"="\d+"}
      * )
-     * @View
+     * @View(serializerGroups={"detail"})
      */
     public function showAction(role $role)
     {
@@ -80,11 +81,14 @@ class RoleController extends FOSRestController
      /**
      * Lists all pool entities. 
      * @Rest\Get("/roles", name="app_role_list")
-     * @View
+     * @View(serializerGroups={"list"})
      */
     public function listAction()
     {
         $roles = $this->getDoctrine()->getRepository('AppBundle:Role')->findAll();
+        /*foreach($roles as $role){
+            
+        }*/
         return $roles;
     }
 

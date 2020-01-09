@@ -81,7 +81,7 @@ class PoolController extends FOSRestController
      /**
      * Lists all pool entities. 
      * @Rest\Get("/pools", name="app_pool_list")
-     * @View
+     * @View(serializerGroups={"list"})
      */
     public function listAction()
     {

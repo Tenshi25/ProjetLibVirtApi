@@ -36,6 +36,7 @@ class Pool
 
     /**
      * @ORM\OneToMany(targetEntity="Vm", mappedBy="pool" ,cascade={"persist"})
+     * @Serializer\Groups({"detail"})
      */
 
     private $vmsPool;
@@ -47,6 +48,7 @@ class Pool
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="pools")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Serializer\Groups({"detail", "list"})
      */
     private $user;
 

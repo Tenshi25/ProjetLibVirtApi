@@ -61,7 +61,7 @@ class VmController extends Controller
 
         return $response;
     }
-/**
+    /**
      * @Route("/vms/{id}", name="vms_delete")
      * @Method({"DELETE"})
      */

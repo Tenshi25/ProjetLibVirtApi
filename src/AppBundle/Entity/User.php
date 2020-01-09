@@ -40,19 +40,20 @@ class User
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
+     * @Serializer\Groups({"aucun"})
      */
     private $password;
     
     /**
      * @ORM\ManyToOne(targetEntity="Role", inversedBy="users")
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
-     * @Serializer\Groups({"aucun"})
+     * @Serializer\Groups({"detail", "list"})
      */
     private $role;
 
     /**
      * @ORM\OneToMany(targetEntity="Vm", mappedBy="user", cascade={"remove"})
-     * @Serializer\Groups({"aucun"})
+     * @Serializer\Groups({"detail"})
      */
     private $vms;
 
