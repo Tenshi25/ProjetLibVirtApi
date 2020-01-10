@@ -3,12 +3,15 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Role;
+use AppBundle\Form\RoleType;
 use FOS\RestBundle\Controller\FOSRestController;
 
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -20,6 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
 use JMS\Serializer\SerializationContext;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Role controller.
@@ -105,6 +109,62 @@ class RoleController extends FOSRestController
             $em->remove($role);
             $em->flush();
     }
+
+    /**
+     * @Rest\View()
+     * @Rest\Put("/roles/{id}",requirements = {"id"="\d+"})
+     */
+    public function updateAction(Request $request)
+    {
+        $role = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('AppBundle:Role')
+                ->find($request->get('id'));
+
+        if (empty($role)) {
+            return new JsonResponse(['message' => 'role not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm(RoleType::class, $role);
+
+        $form->submit($request->request->all());
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($role);
+            $em->flush();
+            return $role;
+        } else {
+            return $form;
+        }
+    }
+    /**
+     * @Rest\View()
+     * @Rest\Patch("/roles/{id}",requirements = {"id"="\d+"})
+     */
+    public function patchAction(Request $request)
+    {
+        $role = $this->getDoctrine()->getManager()
+                ->getRepository('AppBundle:Role')
+                ->find($request->get('id'));
+
+        if (empty($role)) {
+            return new JsonResponse(['message' => 'role not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm(RoleType::class, $role);
+
+        $form->submit($request->request->all(), false);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($role);
+            $em->flush();
+            return $role;
+        } else {
+            return $form;
+        }
+    }
+
 
 
 }

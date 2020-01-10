@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Form\UserType;
 use FOS\RestBundle\Controller\FOSRestController;
 
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -19,7 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
 use JMS\Serializer\SerializationContext;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * User controller.
@@ -105,6 +106,60 @@ class UserController extends FOSRestController
             ->find($request->get('id'));
             $em->remove($user);
             $em->flush();
+    }
+    /**
+     * @Rest\View()
+     * @Rest\Put("/users/{id}",requirements = {"id"="\d+"})
+     */
+    public function updateAction(Request $request)
+    {
+        $user = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('AppBundle:User')
+                ->find($request->get('id'));
+
+        if (empty($user)) {
+            return new JsonResponse(['message' => 'user not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->submit($request->request->all());
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($user);
+            $em->flush();
+            return $user;
+        } else {
+            return $form;
+        }
+    }
+    /**
+     * @Rest\View()
+     * @Rest\Patch("/users/{id}",requirements = {"id"="\d+"})
+     */
+    public function patchAction(Request $request)
+    {
+        $user = $this->getDoctrine()->getManager()
+                ->getRepository('AppBundle:User')
+                ->find($request->get('id'));
+
+        if (empty($user)) {
+            return new JsonResponse(['message' => 'user not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->submit($request->request->all(), false);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($user);
+            $em->flush();
+            return $user;
+        } else {
+            return $form;
+        }
     }
 
 }
