@@ -21,6 +21,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Nelmio\ApiDocBundle\Annotation as Doc;
 
 /**
  * User controller.
@@ -30,6 +31,18 @@ class UserController extends FOSRestController
 {
 
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get one user.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The user unique identifier."
+     *         }
+     *     }
+     * )
      * @Get(
      *     path = "/users/{id}",
      *     name = "app_user_show",
@@ -43,6 +56,10 @@ class UserController extends FOSRestController
     }
 
      /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Create one user."
+     * )
      * @Rest\Post(
      *    path = "/users",
      *    name = "app_user_create"
@@ -83,6 +100,10 @@ class UserController extends FOSRestController
     }
 
      /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get the list of all users."
+     * )
      * Lists all user entities. 
      * @Rest\Get("/users", name="app_user_list")
      * @View(serializerGroups={"list"})
@@ -95,6 +116,18 @@ class UserController extends FOSRestController
     }
 
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="delete one user.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The user unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/users/{id}")
      */
@@ -108,6 +141,18 @@ class UserController extends FOSRestController
             $em->flush();
     }
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Put / Modify one user.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The user unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View()
      * @Rest\Put("/users/{id}",requirements = {"id"="\d+"})
      */
@@ -135,6 +180,18 @@ class UserController extends FOSRestController
         }
     }
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Patch / modify one pool.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The pool unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View()
      * @Rest\Patch("/users/{id}",requirements = {"id"="\d+"})
      */

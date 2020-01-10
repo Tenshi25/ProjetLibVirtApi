@@ -21,6 +21,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Nelmio\ApiDocBundle\Annotation as Doc;
+
 
 
 /**
@@ -30,6 +32,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class PoolController extends FOSRestController
 {
     /**
+     *@Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get one pool.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The pool unique identifier."
+     *         }
+     *     }
+     * )
      * @Get(
      *     path = "/pools/{id}",
      *     name = "app_pool_show",
@@ -43,6 +57,10 @@ class PoolController extends FOSRestController
     }
 
      /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Create one role."
+     * )
      * @Rest\Post(
      *    path = "/pools",
      *    name = "app_pool_create"
@@ -81,6 +99,18 @@ class PoolController extends FOSRestController
     }
 
      /**
+     * * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get one role.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The role unique identifier."
+     *         }
+     *     }
+     * )
      * Lists all pool entities. 
      * @Rest\Get("/pools", name="app_pool_list")
      * @View(serializerGroups={"list"})
@@ -92,6 +122,18 @@ class PoolController extends FOSRestController
     }
 
     /**
+     *@Doc\ApiDoc(
+     *     resource=true,
+     *     description="delete one pool.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The pool unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/pools/{id}")
      */
@@ -106,6 +148,18 @@ class PoolController extends FOSRestController
     }
 
     /**
+     *@Doc\ApiDoc(
+     *     resource=true,
+     *     description="Put / modify one pool.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The pool unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View()
      * @Rest\Put("/pools/{id}",requirements = {"id"="\d+"})
      */
@@ -133,6 +187,18 @@ class PoolController extends FOSRestController
         }
     }
     /**
+     *@Doc\ApiDoc(
+     *     resource=true,
+     *     description="Patch / modify one pool.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The pool unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View()
      * @Rest\Patch("/pools/{id}",requirements = {"id"="\d+"})
      */

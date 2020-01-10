@@ -89,3 +89,5 @@ fos_rest:
         enabled: true
         codes:
            { AppBundle\Exception\ResourceValidationException: 400 }
+
+nelmio_api_doc: ~

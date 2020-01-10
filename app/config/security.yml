@@ -12,8 +12,8 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        doc:
-            pattern: ^/documentation
+        api_doc:
+            pattern: ^/api/doc
             security: false
 
         main:

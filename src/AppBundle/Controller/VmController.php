@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Nelmio\ApiDocBundle\Annotation as Doc;
 
 /**
  * Vm controller.
@@ -28,7 +29,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class VmController extends FOSRestController
 {
-      /**
+    /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get one vm.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The vm unique identifier."
+     *         }
+     *     }
+     * )  
      * @Get(
      *     path = "/vms/{id}",
      *     name = "app_vm_show",
@@ -42,6 +55,11 @@ class VmController extends FOSRestController
     }
 
      /**
+     *
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Create one role."
+     * ) 
      * @Rest\Post(
      *    path = "/vms",
      *    name = "app_vm_create"
@@ -83,6 +101,10 @@ class VmController extends FOSRestController
  
 
     /**
+    * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get the list of all vms."
+     * )
      * Lists all vm entities. 
      * @Rest\Get("/vms", name="app_vm_list")
      * @View(serializerGroups={"list"})
@@ -94,6 +116,18 @@ class VmController extends FOSRestController
     }
 
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="delete one vm.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The vm unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/vms/{id}",requirements = {"id"="\d+"})
      */
@@ -109,6 +143,18 @@ class VmController extends FOSRestController
     }
 
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Put / Modify one vm.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The vm unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View()
      * @Rest\Put("/vms/{id}",requirements = {"id"="\d+"})
      */
@@ -136,6 +182,18 @@ class VmController extends FOSRestController
         }
     }
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Patch / modify one pool.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The pool unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View()
      * @Rest\Patch("/vms/{id}",requirements = {"id"="\d+"})
      */
