@@ -24,6 +24,8 @@ use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+
 
 /**
  * Role controller.
@@ -32,10 +34,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class RoleController extends FOSRestController
 {
     /**
+     * @ApiDoc(
+     *    description="Récupère la liste des roles de l'API"
+     * )
+     * 
+     * 
      * @Get(
      *     path = "/roles/{id}",
      *     name = "app_role_show",
      *     requirements = {"id"="\d+"}
+     *     description="id du rôle"
      * )
      * @View(serializerGroups={"detail"})
      */
