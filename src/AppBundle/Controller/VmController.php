@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Vm;
+use AppBundle\Form\VmType;
 use FOS\RestBundle\Controller\FOSRestController;
 
 use JMS\Serializer\SerializationContext;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Vm controller.
@@ -93,7 +95,7 @@ class VmController extends FOSRestController
 
     /**
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
-     * @Rest\Delete("/vms/{id}")
+     * @Rest\Delete("/vms/{id}",requirements = {"id"="\d+"})
      */
 
     public function deleteAction(Request $request)
@@ -104,6 +106,61 @@ class VmController extends FOSRestController
             $em->remove($vm);
             $em->flush();
             
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Put("/vms/{id}",requirements = {"id"="\d+"})
+     */
+    public function updateAction(Request $request)
+    {
+        $vm = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('AppBundle:Vm')
+                ->find($request->get('id'));
+
+        if (empty($vm)) {
+            return new JsonResponse(['message' => 'vm not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm(VmType::class, $vm);
+
+        $form->submit($request->request->all());
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($vm);
+            $em->flush();
+            return $vm;
+        } else {
+            return $form;
+        }
+    }
+    /**
+     * @Rest\View()
+     * @Rest\Patch("/vms/{id}",requirements = {"id"="\d+"})
+     */
+    public function patchAction(Request $request)
+    {
+        $vm = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('AppBundle:Vm')
+                ->find($request->get('id'));
+
+        if (empty($vm)) {
+            return new JsonResponse(['message' => 'vm not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm(VmType::class, $vm);
+
+        $form->submit($request->request->all(), false);
+
+        if ($form->isValid()) {
+            $em = $this->get('doctrine.orm.entity_manager');
+            $em->merge($vm);
+            $em->flush();
+            return $vm;
+        } else {
+            return $form;
+        }
     }
 
 }

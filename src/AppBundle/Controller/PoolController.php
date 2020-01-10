@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Pool;
+use AppBundle\Form\PoolType;
 use FOS\RestBundle\Controller\FOSRestController;
 
 
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 /**
@@ -33,7 +35,7 @@ class PoolController extends FOSRestController
      *     name = "app_pool_show",
      *     requirements = {"id"="\d+"}
      * )
-     * @View
+     * @View(serializerGroups={"detail"})
      */
     public function showAction(pool $pool)
     {
@@ -101,6 +103,61 @@ class PoolController extends FOSRestController
             ->find($request->get('id'));
             $em->remove($pool);
             $em->flush();
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Put("/pools/{id}",requirements = {"id"="\d+"})
+     */
+    public function updateAction(Request $request)
+    {
+        $pool = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('AppBundle:Pool')
+                ->find($request->get('id'));
+
+        if (empty($pool)) {
+            return new JsonResponse(['message' => 'pool not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm(PoolType::class, $pool);
+
+        $form->submit($request->request->all());
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($pool);
+            $em->flush();
+            return $pool;
+        } else {
+            return $form;
+        }
+    }
+    /**
+     * @Rest\View()
+     * @Rest\Patch("/pools/{id}",requirements = {"id"="\d+"})
+     */
+    public function patchAction(Request $request)
+    {
+        $pool = $this->getDoctrine()->getManager()
+                ->getRepository('AppBundle:Pool')
+                ->find($request->get('id'));
+
+        if (empty($pool)) {
+            return new JsonResponse(['message' => 'pool not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm(PoolType::class, $pool);
+
+        $form->submit($request->request->all(), false);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($pool);
+            $em->flush();
+            return $pool;
+        } else {
+            return $form;
+        }
     }
 
 }
