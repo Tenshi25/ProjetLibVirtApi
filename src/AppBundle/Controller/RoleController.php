@@ -24,6 +24,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Nelmio\ApiDocBundle\Annotation as Doc;
 
 /**
  * Role controller.
@@ -32,6 +33,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class RoleController extends FOSRestController
 {
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get one role.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The role unique identifier."
+     *         }
+     *     }
+     * )
+     * 
      * @Get(
      *     path = "/roles/{id}",
      *     name = "app_role_show",
@@ -45,6 +59,12 @@ class RoleController extends FOSRestController
     }
 
      /**
+     *
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Create one role."
+     * )
+     *  
      * @Rest\Post(
      *    path = "/roles",
      *    name = "app_role_create"
@@ -83,6 +103,10 @@ class RoleController extends FOSRestController
     }
 
      /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get the list of all roles."
+     * )
      * Lists all pool entities. 
      * @Rest\Get("/roles", name="app_role_list")
      * @View(serializerGroups={"list"})
@@ -97,6 +121,18 @@ class RoleController extends FOSRestController
     }
 
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="delete one role.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The role unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/roles/{id}")
      */
@@ -111,6 +147,18 @@ class RoleController extends FOSRestController
     }
 
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Put / Modify one role.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The role unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View()
      * @Rest\Put("/roles/{id}",requirements = {"id"="\d+"})
      */
@@ -138,6 +186,18 @@ class RoleController extends FOSRestController
         }
     }
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Patch / modify one role.",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The role unique identifier."
+     *         }
+     *     }
+     * )
      * @Rest\View()
      * @Rest\Patch("/roles/{id}",requirements = {"id"="\d+"})
      */
